@@ -56,7 +56,7 @@ npm run extension:zip
 unzip -t extension/dist/yt-download-plus-extension.zip
 ```
 
-Le guide complet de test et de release est disponible dans `docs/RELEASE.md`. Si les commandes `rm -rf` ou `cp` ne fonctionnent pas sur votre machine, utilisez `npm run release:prepare`.
+Le guide complet de test et de release est disponible dans `docs/RELEASE.md`. Si les commandes `rm -rf` ou `cp` ne fonctionnent pas sur votre machine, utilisez `npm run release:prepare`. En cas de conflits GitHub sur une pull request, consultez `docs/GITHUB_PR.md`.
 
 ## Installer l’extension Chromium
 
