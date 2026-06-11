@@ -1,0 +1,12 @@
+node_modules
+.next
+out
+.env*.local
+npm-debug.log*
+.DS_Store
+
+# Generated release artifacts (binary files are built locally, not committed)
+extension/dist/
+extension/icons/*.png
+apps/web/public/extension/*.zip
+release/
