@@ -10,7 +10,8 @@
     "dev": "npm --workspace apps/web run dev",
     "build": "npm --workspace apps/web run build && npm run extension:zip",
     "lint": "npm --workspace apps/web run lint",
-    "extension:zip": "node scripts/build-extension-zip.mjs"
+    "extension:zip": "node scripts/build-extension-zip.mjs",
+    "release:prepare": "node scripts/prepare-release.mjs"
   },
   "engines": {
     "node": ">=18.17.0"

@@ -1,18 +1,35 @@
 import Link from "next/link";
 import { Logo } from "./Logo";
+import { ThemeToggle } from "./ThemeToggle";
+
+const links = [
+  { href: "/docs#installation", label: "Extension" },
+  { href: "/docs", label: "Docs" },
+  { href: "/download", label: "Télécharger" },
+  { href: "https://github.com/", label: "GitHub", external: true }
+];
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-20 border-b border-zinc-200/70 bg-white/85 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-30 border-b border-line bg-surface/95 backdrop-blur-xl">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
         <Logo />
-        <nav className="hidden items-center gap-2 sm:flex" aria-label="Navigation principale">
-          <Link className="youtube-chip" href="/install">
-            Installation
+        <nav className="flex items-center gap-1" aria-label="Navigation principale">
+          {links.map((link) => (
+            <Link
+              className="hidden rounded-full px-3 py-2 text-sm font-medium text-muted transition hover:bg-panel hover:text-ink md:inline-flex"
+              href={link.href}
+              key={link.label}
+              rel={link.external ? "noreferrer" : undefined}
+              target={link.external ? "_blank" : undefined}
+            >
+              {link.label}
+            </Link>
+          ))}
+          <Link className="rounded-full px-3 py-2 text-sm font-medium text-muted transition hover:bg-panel hover:text-ink md:hidden" href="/download">
+            Télécharger
           </Link>
-          <Link className="youtube-chip" href="/download">
-            Télécharger par lien
-          </Link>
+          <ThemeToggle />
         </nav>
       </div>
     </header>

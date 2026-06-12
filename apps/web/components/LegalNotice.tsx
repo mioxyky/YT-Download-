@@ -1,7 +1,7 @@
 export function LegalNotice() {
   return (
-    <p className="rounded-2xl border border-blue-100 bg-blue-50 px-4 py-3 text-sm text-zinc-600">
-      Utilisez YT Download+ uniquement pour télécharger des vidéos que vous possédez ou pour lesquelles vous avez une autorisation explicite.
+    <p className="rounded-xl border border-line bg-panel px-4 py-3 text-sm leading-6 text-muted">
+      Téléchargez uniquement les vidéos que vous possédez ou que vous avez le droit de télécharger.
     </p>
   );
 }

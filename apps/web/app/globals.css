@@ -4,23 +4,65 @@
 
 :root {
   color-scheme: light;
-  --surface: #ffffff;
-  --subtle: #f2f2f2;
-  --text: #0f0f0f;
+  --color-bg: 255 255 255;
+  --color-ink: 15 15 15;
+  --color-muted: 96 96 96;
+  --color-surface: 255 255 255;
+  --color-panel: 242 242 242;
+  --color-line: 229 229 229;
+}
+
+.dark {
+  color-scheme: dark;
+  --color-bg: 15 15 15;
+  --color-ink: 241 241 241;
+  --color-muted: 170 170 170;
+  --color-surface: 15 15 15;
+  --color-panel: 33 33 33;
+  --color-line: 48 48 48;
 }
 
 * {
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   min-height: 100vh;
-  background: radial-gradient(circle at top right, rgba(47, 128, 237, 0.14), transparent 30%), #ffffff;
-  color: var(--text);
+  background: rgb(var(--color-bg));
+  color: rgb(var(--color-ink));
   font-family: Roboto, Arial, Helvetica, sans-serif;
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+::selection {
+  background: rgb(62 166 255 / 0.28);
+}
+
+.ytdp-page-shell {
+  min-height: calc(100vh - 65px);
+}
+
+.ytdp-container {
+  @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
 }
 
 .youtube-chip {
-  @apply rounded-full bg-zinc-100 px-4 py-2 text-sm font-medium text-zinc-900 transition hover:bg-zinc-200;
+  @apply rounded-full px-4 py-2 text-sm font-medium text-muted transition hover:bg-panel hover:text-ink;
+}
+
+.ytdp-card {
+  @apply rounded-2xl border border-line bg-surface shadow-sm transition-colors;
+}
+
+.ytdp-primary-button {
+  @apply inline-flex min-h-11 items-center justify-center rounded-full bg-ink px-6 py-3 text-sm font-bold text-surface transition hover:opacity-85 focus:outline-none focus:ring-4 focus:ring-blue-500/20;
+}
+
+.ytdp-secondary-button {
+  @apply inline-flex min-h-11 items-center justify-center rounded-full bg-panel px-6 py-3 text-sm font-bold text-ink transition hover:bg-line focus:outline-none focus:ring-4 focus:ring-blue-500/20;
 }
