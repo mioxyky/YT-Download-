@@ -2,6 +2,7 @@
   "name": "yt-download-plus",
   "version": "0.1.0",
   "private": true,
+  "license": "GPL-3.0",
   "description": "YT Download+ web app and manually installable browser extension.",
   "workspaces": [
     "apps/web"

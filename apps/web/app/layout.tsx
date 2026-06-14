@@ -1,38 +1,16 @@
 import type { Metadata } from "next";
-import { Header } from "../components/Header";
-import { ThemeProvider } from "../components/ThemeProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "YT Download+",
-  description: "Site vitrine et extension navigateur pour préparer le téléchargement de vidéos YouTube."
+  description: "Téléchargez des vidéos YouTube en 1 clic."
 };
-
-const themeScript = `
-(function () {
-  try {
-    var saved = localStorage.getItem('ytdp-theme');
-    var theme = saved === 'light' || saved === 'dark' ? saved : 'dark';
-    document.documentElement.classList.toggle('dark', theme === 'dark');
-    document.documentElement.dataset.theme = theme;
-  } catch (_) {
-    document.documentElement.classList.add('dark');
-    document.documentElement.dataset.theme = 'dark';
-  }
-})();
-`;
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="fr" suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-      </head>
-      <body>
-        <ThemeProvider>
-          <Header />
-          {children}
-        </ThemeProvider>
+    <html lang="fr" className="dark">
+      <body className="bg-[rgb(var(--background))] text-white min-h-screen">
+        {children}
       </body>
     </html>
   );

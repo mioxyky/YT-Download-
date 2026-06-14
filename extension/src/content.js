@@ -136,15 +136,29 @@
     downloadButton.type = "button";
     downloadButton.textContent = "Télécharger";
     downloadButton.addEventListener("click", () => {
-      // Placeholder backend : remplacez cette ouverture par un appel fetch POST quand l'API existe.
-      const payload = new URLSearchParams({
-        url: getVideoUrl(),
-        type: state.type.toLowerCase(),
-        quality: state.quality,
-        format: state.format.toLowerCase()
+      downloadButton.textContent = "Préparation...";
+      downloadButton.disabled = true;
+      
+      chrome.runtime.sendMessage({
+        action: "downloadVideo",
+        payload: {
+          url: getVideoUrl(),
+          type: state.type.toLowerCase(),
+          quality: state.quality,
+          format: state.format.toLowerCase(),
+          backendUrl: CONFIG.backendBaseUrl || "http://localhost:3000"
+        }
+      }, (response) => {
+        downloadButton.disabled = false;
+        if (response && response.success) {
+          downloadButton.textContent = "Téléchargé !";
+          setTimeout(() => downloadButton.textContent = "Télécharger", 3000);
+        } else {
+          downloadButton.textContent = "Erreur";
+          setTimeout(() => downloadButton.textContent = "Télécharger", 3000);
+          console.error("YT Download+ Error:", response?.error);
+        }
       });
-      const target = CONFIG.backendBaseUrl ? `${CONFIG.backendBaseUrl}/download?${payload}` : `#${payload}`;
-      window.open(target, "_blank", "noopener,noreferrer");
     });
     popover.append(downloadButton);
 
