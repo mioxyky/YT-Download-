@@ -95,12 +95,20 @@
   font-size: 12px;
   font-weight: 600;
   padding: 6px 10px;
+  transition: all 160ms ease;
+}
+
+.ytdlp-segmented button:hover,
+.ytdlp-format-button:hover {
+  background: rgba(255, 0, 51, 0.1);
+  box-shadow: inset 0 0 10px rgba(255, 0, 51, 0.15);
 }
 
 .ytdlp-segmented button[data-active="true"],
 .ytdlp-format-button[data-active="true"] {
   background: var(--ytdlp-active-bg, #0f0f0f);
   color: var(--ytdlp-active-text, #ffffff);
+  box-shadow: inset 0 0 12px rgba(255, 0, 51, 0.4);
 }
 
 .ytdlp-select {
@@ -115,6 +123,11 @@
   min-height: 32px;
   padding: 0 10px;
   width: 100%;
+  transition: all 160ms ease;
+}
+
+.ytdlp-select:hover {
+  box-shadow: inset 0 0 8px rgba(255, 0, 51, 0.15);
 }
 
 .ytdlp-format-grid {
@@ -135,10 +148,13 @@
   margin-top: 12px;
   min-height: 36px;
   width: 100%;
+  transition: all 160ms ease;
+  box-shadow: 0 0 12px rgba(255, 0, 51, 0.3);
 }
 
 .ytdlp-download:hover {
   background: #d9002b;
+  box-shadow: 0 0 16px rgba(255, 0, 51, 0.5);
 }
 
 .ytdlp-legal {
