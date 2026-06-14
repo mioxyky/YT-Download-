@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import ytdl from 'ytdl-core';
+import ytdl from '@distube/ytdl-core';
 
 function corsHeaders() {
   return {
