@@ -185,30 +185,33 @@
     button.append(createIcon(), document.createTextNode("Télécharger"));
 
     const popover = createPopover();
+    document.body.appendChild(popover);
+
     button.addEventListener("click", (event) => {
       event.stopPropagation();
       const isOpen = popover.getAttribute("data-open") === "true";
       closeOtherPopovers(popover);
-      popover.setAttribute("data-open", String(!isOpen));
-      button.setAttribute("aria-expanded", String(!isOpen));
+      
+      if (!isOpen) {
+        const rect = button.getBoundingClientRect();
+        popover.style.position = "fixed";
+        popover.style.top = `${rect.bottom + 8}px`;
+        popover.style.left = `${Math.max(10, rect.right - 292)}px`;
+        popover.style.zIndex = "9999999";
+        popover.setAttribute("data-open", "true");
+        button.setAttribute("aria-expanded", "true");
+      } else {
+        popover.setAttribute("data-open", "false");
+        button.setAttribute("aria-expanded", "false");
+      }
     });
 
-    wrapper.append(button, popover);
+    wrapper.append(button);
     return wrapper;
   }
 
-  function injectButton() {
-    if (!location.pathname.includes("/watch")) {
-      document.getElementById(BUTTON_ID)?.remove();
-      return;
-    }
-
-    const actionBar = findActionBar();
-    if (!actionBar || document.getElementById(BUTTON_ID)) {
-      return;
-    }
-
-    actionBar.append(createButton());
+  function cleanUpPopovers() {
+    document.querySelectorAll(".ytdlp-popover").forEach(p => p.remove());
   }
 
   function scheduleInject() {
@@ -219,8 +222,12 @@
 
   document.addEventListener("click", (event) => {
     const target = event.target;
-    if (target instanceof Node && !document.getElementById(BUTTON_ID)?.contains(target)) {
-      document.querySelectorAll(".ytdlp-popover").forEach((popover) => popover.setAttribute("data-open", "false"));
+    if (target instanceof Node) {
+      const isButton = document.getElementById(BUTTON_ID)?.contains(target);
+      const isPopover = target.closest && target.closest(".ytdlp-popover");
+      if (!isButton && !isPopover) {
+        document.querySelectorAll(".ytdlp-popover").forEach((popover) => popover.setAttribute("data-open", "false"));
+      }
     }
   });
 
