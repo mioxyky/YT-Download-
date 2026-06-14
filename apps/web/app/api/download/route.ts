@@ -54,7 +54,7 @@ export async function POST(request: Request) {
     }
 
     // Fallback approach: Use a public API (like Cobalt.tools)
-    const cobaltRes = await fetch('https://co.wuk.sh/api/json', {
+    const cobaltRes = await fetch('https://api.cobalt.tools/api/json', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',

@@ -85,21 +85,12 @@
     formatGroup.append(formatGrid);
     popover.append(formatGroup);
 
-    const qualityGroup = document.createElement("label");
+    const qualityGroup = document.createElement("div");
     qualityGroup.className = "ytdlp-group";
     qualityGroup.innerHTML = '<span class="ytdlp-label">Qualité</span>';
-    const qualitySelect = document.createElement("select");
-    qualitySelect.className = "ytdlp-select";
-    QUALITY_OPTIONS.forEach((quality) => {
-      const option = document.createElement("option");
-      option.value = quality;
-      option.textContent = quality;
-      qualitySelect.append(option);
-    });
-    qualitySelect.addEventListener("change", () => {
-      state.quality = qualitySelect.value;
-    });
-    qualityGroup.append(qualitySelect);
+    const qualityGrid = document.createElement("div");
+    qualityGrid.className = "ytdlp-quality-grid";
+    qualityGroup.append(qualityGrid);
     popover.append(qualityGroup);
 
     function renderTypes() {
@@ -109,12 +100,14 @@
           state.format = state.format === "MP3" || state.format === "WAV" ? "MP4" : state.format;
           renderTypes();
           renderFormats();
+          renderQualities();
         }),
         createOptionButton("Audio", state.type === "Audio", () => {
           state.type = "Audio";
           state.format = state.format === "MP4" ? "MP3" : state.format;
           renderTypes();
           renderFormats();
+          renderQualities();
         })
       );
     }
@@ -131,6 +124,24 @@
           return btn;
         })
       );
+    }
+
+    function renderQualities() {
+      if (state.type === "Audio") {
+        qualityGroup.style.display = "none";
+      } else {
+        qualityGroup.style.display = "block";
+        qualityGrid.replaceChildren(
+          ...QUALITY_OPTIONS.map((quality) => {
+            const btn = createOptionButton(quality, state.quality === quality, () => {
+              state.quality = quality;
+              renderQualities();
+            });
+            btn.className = "ytdlp-format-button";
+            return btn;
+          })
+        );
+      }
     }
 
     const downloadButton = document.createElement("button");
@@ -166,6 +177,7 @@
 
     renderTypes();
     renderFormats();
+    renderQualities();
     return popover;
   }
 

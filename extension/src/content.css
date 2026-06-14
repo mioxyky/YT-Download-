@@ -136,6 +136,12 @@
   grid-template-columns: repeat(3, 1fr);
 }
 
+.ytdlp-quality-grid {
+  display: grid;
+  gap: 4px;
+  grid-template-columns: repeat(2, 1fr);
+}
+
 .ytdlp-download {
   background: #ff0033;
   border: 0;
@@ -186,67 +192,136 @@ html[dark] .ytdlp-popover,
 
 /* LIKE (Blue) */
 button[aria-label*="J'aime" i]:not([aria-label*="pas" i]),
-button[title*="J'aime" i]:not([title*="pas" i]) {
+[aria-label*="J'aime" i]:not([aria-label*="pas" i]) button,
+button[title*="J'aime" i]:not([title*="pas" i]),
+[title*="J'aime" i]:not([title*="pas" i]) button {
   box-shadow: inset 0 0 10px rgba(0, 100, 255, 0.25) !important;
   transition: box-shadow 160ms ease !important;
 }
 button[aria-label*="J'aime" i]:not([aria-label*="pas" i]):hover,
-button[title*="J'aime" i]:not([title*="pas" i]):hover {
+[aria-label*="J'aime" i]:not([aria-label*="pas" i]):hover button,
+button[title*="J'aime" i]:not([title*="pas" i]):hover,
+[title*="J'aime" i]:not([title*="pas" i]):hover button {
   box-shadow: inset 0 0 16px rgba(0, 100, 255, 0.45) !important;
 }
 
 /* DISLIKE (Dark Red) */
 button[aria-label*="Je n'aime pas" i],
-button[title*="Je n'aime pas" i] {
+[aria-label*="Je n'aime pas" i] button,
+button[title*="Je n'aime pas" i],
+[title*="Je n'aime pas" i] button {
   box-shadow: inset 0 0 10px rgba(180, 0, 30, 0.25) !important;
   transition: box-shadow 160ms ease !important;
 }
 button[aria-label*="Je n'aime pas" i]:hover,
-button[title*="Je n'aime pas" i]:hover {
+[aria-label*="Je n'aime pas" i]:hover button,
+button[title*="Je n'aime pas" i]:hover,
+[title*="Je n'aime pas" i]:hover button {
   box-shadow: inset 0 0 16px rgba(180, 0, 30, 0.45) !important;
 }
 
 /* SHARE (Green) */
 button[aria-label*="Partager" i],
-button[title*="Partager" i] {
+[aria-label*="Partager" i] button,
+button[title*="Partager" i],
+[title*="Partager" i] button {
   box-shadow: inset 0 0 10px rgba(0, 180, 60, 0.25) !important;
   transition: box-shadow 160ms ease !important;
 }
 button[aria-label*="Partager" i]:hover,
-button[title*="Partager" i]:hover {
+[aria-label*="Partager" i]:hover button,
+button[title*="Partager" i]:hover,
+[title*="Partager" i]:hover button {
   box-shadow: inset 0 0 16px rgba(0, 180, 60, 0.45) !important;
 }
 
 /* SAVE (Orange) */
 button[aria-label*="Enregistrer" i],
-button[title*="Enregistrer" i] {
+[aria-label*="Enregistrer" i] button,
+button[title*="Enregistrer" i],
+[title*="Enregistrer" i] button {
   box-shadow: inset 0 0 10px rgba(230, 100, 0, 0.25) !important;
   transition: box-shadow 160ms ease !important;
 }
 button[aria-label*="Enregistrer" i]:hover,
-button[title*="Enregistrer" i]:hover {
+[aria-label*="Enregistrer" i]:hover button,
+button[title*="Enregistrer" i]:hover,
+[title*="Enregistrer" i]:hover button {
   box-shadow: inset 0 0 16px rgba(230, 100, 0, 0.45) !important;
 }
 
 /* BELL - ALL (Yellow) */
 button[aria-label*="Toutes" i],
-button[title*="Toutes" i] {
+[aria-label*="Toutes" i] button,
+button[title*="Toutes" i],
+[title*="Toutes" i] button {
   box-shadow: inset 0 0 10px rgba(230, 180, 0, 0.25) !important;
   transition: box-shadow 160ms ease !important;
 }
 button[aria-label*="Toutes" i]:hover,
-button[title*="Toutes" i]:hover {
+[aria-label*="Toutes" i]:hover button,
+button[title*="Toutes" i]:hover,
+[title*="Toutes" i]:hover button {
   box-shadow: inset 0 0 16px rgba(230, 180, 0, 0.45) !important;
+}
+
+/* Ensure inner elements inherit color */
+button[aria-label*="J'aime" i]:not([aria-label*="pas" i]) yt-icon,
+button[aria-label*="J'aime" i]:not([aria-label*="pas" i]) div,
+button[aria-label*="Je n'aime pas" i] yt-icon,
+button[aria-label*="Je n'aime pas" i] div,
+button[aria-label*="Partager" i] yt-icon,
+button[aria-label*="Partager" i] div,
+button[aria-label*="Enregistrer" i] yt-icon,
+button[aria-label*="Enregistrer" i] div,
+button[aria-label*="Toutes" i] yt-icon,
+button[aria-label*="Toutes" i] div,
+button[aria-label*="Personnalisées" i] yt-icon,
+button[aria-label*="Personnalisées" i] div {
+  color: inherit !important;
+  fill: inherit !important;
+}
+
+/* =========================================================
+   YOUTUBE NATIVE DROPDOWN MENUS (BELL)
+   ========================================================= */
+
+ytd-menu-service-item-renderer:has(yt-formatted-string[title*="Toutes" i]),
+ytd-menu-service-item-renderer:has(yt-formatted-string:contains("Toutes" i)),
+ytd-menu-service-item-renderer:has([aria-label*="Toutes" i]) {
+  box-shadow: inset 0 0 10px rgba(230, 180, 0, 0.25) !important;
+  transition: box-shadow 160ms ease !important;
+}
+ytd-menu-service-item-renderer:has(yt-formatted-string[title*="Toutes" i]):hover,
+ytd-menu-service-item-renderer:has(yt-formatted-string:contains("Toutes" i)):hover,
+ytd-menu-service-item-renderer:has([aria-label*="Toutes" i]):hover {
+  box-shadow: inset 0 0 16px rgba(230, 180, 0, 0.45) !important;
+}
+
+ytd-menu-service-item-renderer:has(yt-formatted-string[title*="Personnalisées" i]),
+ytd-menu-service-item-renderer:has(yt-formatted-string:contains("Personnalisées" i)),
+ytd-menu-service-item-renderer:has([aria-label*="Personnalisées" i]) {
+  box-shadow: inset 0 0 10px rgba(140, 0, 220, 0.25) !important;
+  transition: box-shadow 160ms ease !important;
+}
+ytd-menu-service-item-renderer:has(yt-formatted-string[title*="Personnalisées" i]):hover,
+ytd-menu-service-item-renderer:has(yt-formatted-string:contains("Personnalisées" i)):hover,
+ytd-menu-service-item-renderer:has([aria-label*="Personnalisées" i]):hover {
+  box-shadow: inset 0 0 16px rgba(140, 0, 220, 0.45) !important;
 }
 
 /* BELL - PERSONALIZED (Purple) */
 button[aria-label*="Personnalisées" i],
-button[title*="Personnalisées" i] {
+[aria-label*="Personnalisées" i] button,
+button[title*="Personnalisées" i],
+[title*="Personnalisées" i] button {
   box-shadow: inset 0 0 10px rgba(140, 0, 220, 0.25) !important;
   transition: box-shadow 160ms ease !important;
 }
 button[aria-label*="Personnalisées" i]:hover,
-button[title*="Personnalisées" i]:hover {
+[aria-label*="Personnalisées" i]:hover button,
+button[title*="Personnalisées" i]:hover,
+[title*="Personnalisées" i]:hover button {
   box-shadow: inset 0 0 16px rgba(140, 0, 220, 0.45) !important;
 }
 
