@@ -49,7 +49,7 @@
     return button;
   }
 
-  function createPopover() {
+  function createPopover(button) {
     const state = {
       type: "Vidéo",
       quality: "Meilleure qualité",
@@ -60,20 +60,30 @@
     popover.className = "ytdlp-popover";
     popover.setAttribute("data-open", "false");
     popover.setAttribute("role", "dialog");
-    popover.setAttribute("aria-label", "Options YT Download+");
+    
+    // Empêcher la propagation des clics à l'intérieur du popover pour ne pas le fermer
+    popover.addEventListener("click", (e) => e.stopPropagation());
 
     const title = document.createElement("div");
     title.className = "ytdlp-title";
-    title.innerHTML = '<span>YT Download<span class="ytdlp-plus">+</span></span><span>⬇</span>';
+    title.innerHTML = '<span>YT Download<span class="ytdlp-plus">+</span></span>';
     popover.append(title);
 
     const typeGroup = document.createElement("div");
     typeGroup.className = "ytdlp-group";
-    typeGroup.innerHTML = '<span class="ytdlp-label">Choix</span>';
+    typeGroup.innerHTML = '<span class="ytdlp-label">Type</span>';
     const segmented = document.createElement("div");
     segmented.className = "ytdlp-segmented";
     typeGroup.append(segmented);
     popover.append(typeGroup);
+
+    const formatGroup = document.createElement("div");
+    formatGroup.className = "ytdlp-group";
+    formatGroup.innerHTML = '<span class="ytdlp-label">Format</span>';
+    const formatGrid = document.createElement("div");
+    formatGrid.className = "ytdlp-format-grid";
+    formatGroup.append(formatGrid);
+    popover.append(formatGroup);
 
     const qualityGroup = document.createElement("label");
     qualityGroup.className = "ytdlp-group";
@@ -92,25 +102,17 @@
     qualityGroup.append(qualitySelect);
     popover.append(qualityGroup);
 
-    const formatGroup = document.createElement("div");
-    formatGroup.className = "ytdlp-group";
-    formatGroup.innerHTML = '<span class="ytdlp-label">Format</span>';
-    const formatGrid = document.createElement("div");
-    formatGrid.className = "ytdlp-format-grid";
-    formatGroup.append(formatGrid);
-    popover.append(formatGroup);
-
     function renderTypes() {
       segmented.replaceChildren(
         createOptionButton("Vidéo", state.type === "Vidéo", () => {
           state.type = "Vidéo";
-          state.format = state.format === "MP3" ? "MP4" : state.format;
+          state.format = state.format === "MP3" || state.format === "WAV" ? "MP4" : state.format;
           renderTypes();
           renderFormats();
         }),
         createOptionButton("Audio", state.type === "Audio", () => {
           state.type = "Audio";
-          state.format = "MP3";
+          state.format = state.format === "MP4" ? "MP3" : state.format;
           renderTypes();
           renderFormats();
         })
@@ -118,15 +120,15 @@
     }
 
     function renderFormats() {
-      const formats = state.type === "Audio" ? ["MP3", "WEBM"] : ["MP4", "WEBM"];
+      const formats = state.type === "Audio" ? ["MP3", "WAV", "WEBM"] : ["MP4", "WEBM"];
       formatGrid.replaceChildren(
         ...formats.map((format) => {
-          const button = createOptionButton(format, state.format === format, () => {
+          const btn = createOptionButton(format, state.format === format, () => {
             state.format = format;
             renderFormats();
           });
-          button.className = "ytdlp-format-button";
-          return button;
+          btn.className = "ytdlp-format-button";
+          return btn;
         })
       );
     }
@@ -162,11 +164,6 @@
     });
     popover.append(downloadButton);
 
-    const legal = document.createElement("p");
-    legal.className = "ytdlp-legal";
-    legal.textContent = CONFIG.legalNotice;
-    popover.append(legal);
-
     renderTypes();
     renderFormats();
     return popover;
@@ -184,8 +181,18 @@
     button.setAttribute("aria-expanded", "false");
     button.append(createIcon(), document.createTextNode("Télécharger"));
 
-    const popover = createPopover();
+    const popover = createPopover(button);
     document.body.appendChild(popover);
+
+    function updatePopoverPosition() {
+      if (popover.getAttribute("data-open") === "true") {
+        const rect = button.getBoundingClientRect();
+        // position: absolute s'ancre au document, on ajoute scrollY
+        popover.style.top = `${rect.bottom + window.scrollY + 8}px`;
+        // alignement à droite, min-width est 260px
+        popover.style.left = `${Math.max(10, rect.right + window.scrollX - 260)}px`;
+      }
+    }
 
     button.addEventListener("click", (event) => {
       event.stopPropagation();
@@ -193,18 +200,19 @@
       closeOtherPopovers(popover);
       
       if (!isOpen) {
-        const rect = button.getBoundingClientRect();
-        popover.style.position = "fixed";
-        popover.style.top = `${rect.bottom + 8}px`;
-        popover.style.left = `${Math.max(10, rect.right - 292)}px`;
+        popover.style.position = "absolute";
         popover.style.zIndex = "9999999";
         popover.setAttribute("data-open", "true");
         button.setAttribute("aria-expanded", "true");
+        updatePopoverPosition();
       } else {
         popover.setAttribute("data-open", "false");
         button.setAttribute("aria-expanded", "false");
       }
     });
+
+    // Mettre à jour la position si la fenêtre est redimensionnée (le scroll est géré nativement par absolute)
+    window.addEventListener("resize", updatePopoverPosition, { passive: true });
 
     wrapper.append(button);
     return wrapper;
@@ -214,26 +222,15 @@
     document.querySelectorAll(".ytdlp-popover").forEach(p => p.remove());
   }
 
-  function scheduleInject() {
-    window.setTimeout(injectButton, 250);
-    window.setTimeout(injectButton, 900);
-    window.setTimeout(injectButton, 1800);
-  }
-
   document.addEventListener("click", (event) => {
-    const target = event.target;
-    if (target instanceof Node) {
-      const isButton = document.getElementById(BUTTON_ID)?.contains(target);
-      const isPopover = target.closest && target.closest(".ytdlp-popover");
-      if (!isButton && !isPopover) {
-        document.querySelectorAll(".ytdlp-popover").forEach((popover) => popover.setAttribute("data-open", "false"));
-      }
-    }
+    // Si on clique en dehors du bouton et du popover, on ferme
+    document.querySelectorAll(".ytdlp-popover").forEach((popover) => popover.setAttribute("data-open", "false"));
   });
 
   function tryInject() {
     if (!location.pathname.includes("/watch")) {
       document.getElementById(BUTTON_ID)?.remove();
+      cleanUpPopovers();
       return;
     }
 
@@ -241,6 +238,7 @@
     if (!actionBar) return;
 
     if (!document.getElementById(BUTTON_ID)) {
+      cleanUpPopovers();
       actionBar.append(createButton());
     }
   }
