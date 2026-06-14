@@ -22,12 +22,13 @@
   min-height: 36px;
   padding: 0 16px;
   transition: background 160ms ease, box-shadow 160ms ease;
-  box-shadow: 0 0 12px rgba(255, 0, 51, 0.25);
+  /* Lueur interne (inset) pour ne pas être coupée par le conteneur YouTube */
+  box-shadow: inset 0 0 10px rgba(255, 0, 51, 0.25);
 }
 
 .ytdlp-button:hover {
   background: var(--ytdlp-button-hover, rgba(0, 0, 0, 0.1));
-  box-shadow: 0 0 18px rgba(255, 0, 51, 0.45);
+  box-shadow: inset 0 0 16px rgba(255, 0, 51, 0.5);
 }
 
 .ytdlp-icon {
