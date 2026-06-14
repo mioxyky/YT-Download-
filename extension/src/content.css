@@ -9,10 +9,10 @@
 
 .ytdlp-button {
   align-items: center;
-  background: #cc0000;
+  background: var(--ytdlp-button-bg, rgba(0, 0, 0, 0.05));
   border: 0;
   border-radius: 18px;
-  color: #ffffff;
+  color: var(--ytdlp-text, #0f0f0f);
   cursor: pointer;
   display: inline-flex;
   font-family: inherit;
@@ -21,12 +21,13 @@
   gap: 6px;
   min-height: 36px;
   padding: 0 16px;
-  transition: background 160ms ease, transform 160ms ease;
+  transition: background 160ms ease, box-shadow 160ms ease;
+  box-shadow: 0 0 12px rgba(255, 0, 51, 0.25);
 }
 
 .ytdlp-button:hover {
-  background: #ff0000;
-  transform: scale(1.02);
+  background: var(--ytdlp-button-hover, rgba(0, 0, 0, 0.1));
+  box-shadow: 0 0 18px rgba(255, 0, 51, 0.45);
 }
 
 .ytdlp-icon {

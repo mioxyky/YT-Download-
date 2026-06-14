@@ -1,13 +1,28 @@
 import { NextResponse } from 'next/server';
 import ytdl from 'ytdl-core';
 
+function corsHeaders() {
+  return {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  };
+}
+
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 200,
+    headers: corsHeaders()
+  });
+}
+
 export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { url, type, quality, format } = body;
 
     if (!url) {
-      return NextResponse.json({ error: 'URL is required' }, { status: 400 });
+      return NextResponse.json({ error: 'URL is required' }, { status: 400, headers: corsHeaders() });
     }
 
     try {
@@ -32,7 +47,7 @@ export async function POST(request: Request) {
           success: true,
           downloadUrl: formatObj.url,
           title: info.videoDetails.title
-        });
+        }, { headers: corsHeaders() });
       }
     } catch (ytdlError) {
       console.warn("ytdl-core failed, falling back to public API", ytdlError);
@@ -59,12 +74,12 @@ export async function POST(request: Request) {
         return NextResponse.json({
           success: true,
           downloadUrl: data.url
-        });
+        }, { headers: corsHeaders() });
       }
     }
 
-    return NextResponse.json({ error: 'Failed to extract download link.' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to extract download link.' }, { status: 500, headers: corsHeaders() });
   } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    return NextResponse.json({ error: err.message }, { status: 500, headers: corsHeaders() });
   }
 }

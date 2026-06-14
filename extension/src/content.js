@@ -12,7 +12,7 @@
     svg.setAttribute("class", "ytdlp-icon");
     svg.setAttribute("viewBox", "0 0 24 24");
     svg.setAttribute("aria-hidden", "true");
-    svg.innerHTML = '<path fill="currentColor" d="M5 20h14v-2H5v2Zm7-18v10.17l3.59-3.58L17 10l-5 5-5-5 1.41-1.41L11 12.17V2h1Z"/>';
+    svg.innerHTML = '<path fill="currentColor" d="M17 18v1H6v-1h11zm-.5-6.6-.7-.7-3.8 3.7V4h-1v10.4l-3.8-3.8-.7.7 5 5 5-4.9z"/>';
     return svg;
   }
 
