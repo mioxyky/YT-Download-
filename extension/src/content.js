@@ -17,12 +17,12 @@
   }
 
   function findActionBar() {
-    // YouTube change régulièrement son DOM. On cible d'abord les zones d'actions modernes,
-    // puis on garde des fallbacks pour ne pas casser l'interface si un sélecteur disparaît.
+    // Ciblage du conteneur des boutons J'aime, Partager, etc.
     return (
+      document.querySelector("ytd-watch-metadata #top-level-buttons-computed") ||
+      document.querySelector("ytd-menu-renderer.ytd-watch-metadata #top-level-buttons-computed") ||
+      document.querySelector("#actions-inner #menu") ||
       document.querySelector("#top-level-buttons-computed") ||
-      document.querySelector("#actions #menu") ||
-      document.querySelector("ytd-menu-renderer.ytd-watch-metadata") ||
       document.querySelector("#actions-inner")
     );
   }
@@ -224,17 +224,25 @@
     }
   });
 
-  observer = new MutationObserver(() => {
-    if (location.href !== lastUrl) {
-      lastUrl = location.href;
+  function tryInject() {
+    if (!location.pathname.includes("/watch")) {
       document.getElementById(BUTTON_ID)?.remove();
-      scheduleInject();
       return;
     }
 
-    injectButton();
-  });
+    const actionBar = findActionBar();
+    if (!actionBar) return;
 
-  observer.observe(document.documentElement, { childList: true, subtree: true });
-  scheduleInject();
+    if (!document.getElementById(BUTTON_ID)) {
+      actionBar.append(createButton());
+    }
+  }
+
+  // Événements YouTube spécifiques
+  document.addEventListener("yt-navigate-finish", tryInject);
+  document.addEventListener("yt-page-data-updated", tryInject);
+
+  // Fallback avec setInterval (léger)
+  setInterval(tryInject, 1500);
+  tryInject();
 })();
