@@ -49,36 +49,10 @@ export async function POST(request: Request) {
           title: info.videoDetails.title
         }, { headers: corsHeaders() });
       }
-    } catch (ytdlError) {
-      console.warn("ytdl-core failed, falling back to public API", ytdlError);
+    } catch (ytdlError: any) {
+      console.warn("ytdl-core failed:", ytdlError);
+      return NextResponse.json({ error: 'Failed to extract download link. YouTube may be blocking the server IP.' }, { status: 500, headers: corsHeaders() });
     }
-
-    // Fallback approach: Use a public API (like Cobalt.tools)
-    const cobaltRes = await fetch('https://api.cobalt.tools/api/json', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        url: url,
-        vQuality: quality === 'Meilleure qualité' ? 'max' : quality.replace('p', ''),
-        isAudioOnly: type === 'audio',
-        aFormat: format === 'mp3' ? 'mp3' : 'best'
-      })
-    });
-
-    if (cobaltRes.ok) {
-      const data = await cobaltRes.json();
-      if (data && data.url) {
-        return NextResponse.json({
-          success: true,
-          downloadUrl: data.url
-        }, { headers: corsHeaders() });
-      }
-    }
-
-    return NextResponse.json({ error: 'Failed to extract download link.' }, { status: 500, headers: corsHeaders() });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500, headers: corsHeaders() });
   }
